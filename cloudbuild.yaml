@@ -7,11 +7,13 @@ steps:
     args:
       - -c
       - |
-        # echo $REPO_NAME
-        # echo $BRANCH_NAME
-        # echo $SHORT_SHA
+        echo $REPO_NAME
+        echo $BRANCH_NAME
+        echo $SHORT_SHA
 
-        docker build -t us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA .
+        export BUILD_REGISTRY=us-east1-docker.pkg.dev/project-lab-355520/tux-app/main
+
+        docker build -t $BUILD_REGISTRY:$SHORT_SHA .
 
   # Docker Push
   - name: 'gcr.io/cloud-builders/docker'
@@ -20,4 +22,23 @@ steps:
     args:
       - -c
       - |
-        docker push us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA
+        docker push $BUILD_REGISTRY:$SHORT_SHA
+
+  # Altera manifesto Kubernetes para nova imagem criada
+  - name: 'gcr.io/cloud-builders/docker'
+    id: Update Kubernetes
+    entrypoint: bash
+    args:
+      - -c
+      - |
+
+        git clone git@bitbucket.org:aristides-neto/tux-app-hml.git
+        cd tux-app-hml
+        echo "OLD:" && cat *-dp.yaml
+        sed -i "s|\(.$BUILD_REGISTRY:.*\)|\/$BUILD_REGISTRY:$SHORT_SHA|g" *-dp.yaml
+        echo && echo "NEW:" && cat *-dp.yaml
+        git config --global user.email $build_service_account
+        git config --global user.name "CloudBuildCICD"
+        git add .
+        git commit -a -m "Atualizado a imagem para a versao $SHORT_SHA"
+        git push

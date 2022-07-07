@@ -17,7 +17,7 @@ function create_database($pdo)
         PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;";
 
-    return $pdo->query($database);
+    $pdo->query($database);
 }
 
 function pdo_connect_mysql()
@@ -37,7 +37,7 @@ function pdo_connect_mysql()
 
 $pdo = pdo_connect_mysql();
 
-echo "Database created: " . create_database($pdo);
+create_database($pdo);
 
 $stmt = $pdo->query('SELECT * FROM contacts ORDER BY id');
 

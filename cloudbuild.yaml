@@ -1,0 +1,23 @@
+steps:
+
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    id: Docker Build
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        # echo $REPO_NAME
+        # echo $BRANCH_NAME
+        # echo $SHORT_SHA
+
+        docker build -t us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA .
+
+  # Docker Push
+  - name: 'gcr.io/cloud-builders/docker'
+    id: Docker Push
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        docker push us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA

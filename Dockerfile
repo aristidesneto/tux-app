@@ -2,6 +2,7 @@ FROM composer:2 as build
 
 WORKDIR /app
 COPY . /app
+RUN .env.example .env
 
 RUN composer install --prefer-dist --optimize-autoloader --no-dev
 

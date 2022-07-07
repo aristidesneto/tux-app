@@ -5,6 +5,21 @@ require __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+function create_database($pdo)
+{
+    $database = "CREATE TABLE IF NOT EXISTS `contacts` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+          `name` varchar(255) NOT NULL,
+          `email` varchar(255) NOT NULL,
+          `phone` varchar(255) NOT NULL,
+          `title` varchar(255) NOT NULL,
+          `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;";
+
+    return $pdo->query($database);
+}
+
 function pdo_connect_mysql()
 {
     $DATABASE_HOST = $_ENV['DB_HOST'];
@@ -21,6 +36,8 @@ function pdo_connect_mysql()
 }
 
 $pdo = pdo_connect_mysql();
+
+echo "Database created: " . create_database($pdo);
 
 $stmt = $pdo->query('SELECT * FROM contacts ORDER BY id');
 

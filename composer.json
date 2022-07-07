@@ -1,0 +1,11 @@
+{
+    "name": "aristides/tux-app",
+    "autoload": {
+        "psr-4": {
+            "Aristides\\TuxApp\\": "src/"
+        }
+    },
+    "require": {
+        "vlucas/phpdotenv": "^5.4"
+    }
+}

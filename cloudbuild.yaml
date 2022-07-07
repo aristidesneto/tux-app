@@ -11,9 +11,9 @@ steps:
         echo $BRANCH_NAME
         echo $SHORT_SHA
 
-        export BUILD_REGISTRY=us-east1-docker.pkg.dev/project-lab-355520/tux-app/main
+        export build_registry=us-east1-docker.pkg.dev/project-lab-355520/tux-app/main
 
-        docker build -t $BUILD_REGISTRY:$SHORT_SHA .
+        docker build -t $build_registry:$SHORT_SHA .
 
   # Docker Push
   - name: 'gcr.io/cloud-builders/docker'
@@ -22,7 +22,7 @@ steps:
     args:
       - -c
       - |
-        docker push $BUILD_REGISTRY:$SHORT_SHA
+        docker push $build_registry:$SHORT_SHA
 
   # Altera manifesto Kubernetes para nova imagem criada
   - name: 'gcr.io/cloud-builders/docker'
@@ -35,7 +35,7 @@ steps:
         git clone git@bitbucket.org:aristides-neto/tux-app-hml.git
         cd tux-app-hml
         echo "OLD:" && cat *-dp.yaml
-        sed -i "s|\(.$BUILD_REGISTRY:.*\)|\/$BUILD_REGISTRY:$SHORT_SHA|g" *-dp.yaml
+        sed -i "s|\(.$build_registry:.*\)|\/$build_registry:$SHORT_SHA|g" *-dp.yaml
         echo && echo "NEW:" && cat *-dp.yaml
         git config --global user.email $build_service_account
         git config --global user.name "CloudBuildCICD"

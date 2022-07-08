@@ -29,6 +29,7 @@ steps:
   #   args:
   #     - -c
   #     - |
+          # source /workspace/build_vars
   #       git clone git@bitbucket.org:aristides-neto/tux-app-hml.git
   #       cd tux-app-hml
   #       echo "OLD:" && cat *-dp.yaml

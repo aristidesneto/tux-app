@@ -24,5 +24,5 @@ $contacts = "INSERT INTO `contacts` (`name`, `email`, `phone`, `title`, `created
 
 $pdo->query($contacts);
 
-echo "Dados inseridos com sucesso... redirecionando!";
 header('Refresh: 2; URL=index.php');
+echo "Dados inseridos com sucesso... redirecionando!";

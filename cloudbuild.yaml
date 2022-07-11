@@ -11,7 +11,7 @@ steps:
         echo $BRANCH_NAME
         echo $SHORT_SHA
 
-        docker build --build-arg GIT_HASH_VERSION={$SHORT_SHA} \
+        docker build --build-arg GIT_HASH_VERSION=$SHORT_SHA \
           -t us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA .
 
   # Docker Push

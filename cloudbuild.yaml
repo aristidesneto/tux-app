@@ -23,20 +23,20 @@ steps:
         docker push us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA
 
   # Altera manifesto Kubernetes para nova imagem criada
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   id: Update Kubernetes
-  #   entrypoint: bash
-  #   args:
-  #     - -c
-  #     - |
-          # source /workspace/build_vars
-  #       git clone git@bitbucket.org:aristides-neto/tux-app-hml.git
-  #       cd tux-app-hml
-  #       echo "OLD:" && cat *-dp.yaml
-  #       sed -i "s|\(.us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:.*\)|\/us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA|g" *-dp.yaml
-  #       echo && echo "NEW:" && cat *-dp.yaml
-  #       git config --global user.email cgloud@pipeline.com
-  #       git config --global user.name "CloudBuildCICD"
-  #       git add .
-  #       git commit -a -m "Atualizado a imagem para a versao $SHORT_SHA"
-  #       git push
+  - name: 'gcr.io/cloud-builders/docker'
+    id: Update Kubernetes
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        
+        git clone https://aristides-neto:GeXxZUfDn4NDGfarhGXf@bitbucket.org/aristides-neto/tux-app-hml.git
+        cd tux-app-hml
+        echo "OLD:" && cat *-dp.yaml
+        sed -i "s|\(.us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:.*\)|\/us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA|g" *-dp.yaml
+        echo && echo "NEW:" && cat *-dp.yaml
+        git config --global user.email cgloud@pipeline.com
+        git config --global user.name "CloudBuildCICD"
+        git add .
+        git commit -a -m "Atualizado a imagem para a versao $SHORT_SHA"
+        git push

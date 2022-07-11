@@ -30,6 +30,11 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     <div class="container mt-4">
         <div class="row">
+            <div class="col-12 text-center">
+                <h1>Sistema de Cadastro Inteligente</h1>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-12 -left">
                 <a class="btn btn-success" href="create.php" >Cadastrar</a>
                 <a class="btn btn-danger" href="delete.php">Limpar</a>

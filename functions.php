@@ -22,7 +22,7 @@ function pdo_connect_mysql()
 
 function get_version()
 {
-    return trim(exec('git log --pretty="%h" -n1 HEAD'));
+    return $_ENV['GIT_HASH_VERSION'] ?? 'Versão não encontrada.';
 }
 
 $pdo = pdo_connect_mysql();

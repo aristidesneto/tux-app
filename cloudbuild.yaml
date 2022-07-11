@@ -33,7 +33,7 @@ steps:
         git clone https://aristides-neto:$_BB_TOKEN@bitbucket.org/aristides-neto/tux-app-hml.git
         cd tux-app-hml
         echo "OLD:" && cat *-dp.yaml
-        sed -i "s|\(.us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:.*\)|\/us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA|g" *-dp.yaml
+        sed -i "s|\(.us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:.*\)| us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA|g" *-dp.yaml
         echo && echo "NEW:" && cat *-dp.yaml
         git config --global user.email cgloud@pipeline.com
         git config --global user.name "CloudBuildCICD"

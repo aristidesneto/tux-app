@@ -55,6 +55,6 @@ steps:
         git config --global user.email cgloud@pipeline.com
         git config --global user.name "CloudBuildCICD"
         git add .
-        git commit -a -m "Atualizado a imagem para a versao $SHORT_SHA"
+        git commit -am "Atualizado a imagem para a versao $SHORT_SHA"
         git push
 

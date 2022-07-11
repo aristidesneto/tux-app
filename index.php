@@ -17,6 +17,12 @@ $pdo->query($database);
 
 $stmt = $pdo->query('SELECT * FROM contacts ORDER BY id');
 $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if (true) {
+    $x = '12';
+} else {
+    $x = '10';
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -56,7 +62,7 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <tbody>
                         <?php foreach ($contacts as $contact) : ?>
                             <tr>
-                                <td scope="row"><?= $contact['id'] ?></td>
+                                <td><?= $contact['id'] ?></td>
                                 <td><?= $contact['name'] ?></td>
                                 <td><?= $contact['email'] ?></td>
                                 <td><?= $contact['phone'] ?></td>

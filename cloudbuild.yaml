@@ -22,6 +22,22 @@ steps:
       - |
         docker push us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA
 
+  # Sonarqube Scanner
+  - name: 'gcr.io/cloud-builders/docker'
+    id: SonarQube Scanner
+    entrypoint: bash
+    args:
+      - -c
+      - |
+
+        docker run --rm \
+          -e SONAR_HOST_URL="http://35.193.8.14:9000" \
+          -e SONAR_LOGIN="sqp_8afb1b679b82b75e0c094f5445bcd497e3399bc1" \
+          -v "/workspace:/usr/src" \
+          sonarsource/sonar-scanner-cli \
+        -Dsonar.projectKey=aristides-neto_tux-app_AYHtgBDWKSVLYYPB0J1q \
+        -Dsonar.sources=.
+
   # Altera manifesto Kubernetes para nova imagem criada
   - name: 'gcr.io/cloud-builders/docker'
     id: Update Kubernetes
@@ -40,3 +56,4 @@ steps:
         git add .
         git commit -a -m "Atualizado a imagem para a versao $SHORT_SHA"
         git push
+

@@ -16,7 +16,7 @@ WORKDIR /var/www/html
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG HASH_VERSION=1
-ENV GIT_HASH_VERSION=opa
+ENV GIT_HASH_VERSION=$HASH_VERSION
 
 RUN apt-get update && apt-get install -y \
 		libfreetype6-dev \

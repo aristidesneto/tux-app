@@ -20,19 +20,9 @@ function pdo_connect_mysql()
     }
 }
 
-function pdo_connect_mysql_not_in_use()
+function get_version()
 {
-    $DATABASE_HOST = $_ENV['DB_HOST'];
-    $DATABASE_PORT = $_ENV['DB_PORT'];
-    $DATABASE_USER = $_ENV['DB_USER'];
-    $DATABASE_PASS = $_ENV['DB_PASS'];
-    $DATABASE_NAME = $_ENV['DB_NAME'];
-
-    try {
-    	return new PDO('mysql:host=' . $DATABASE_HOST . ';port=' . $DATABASE_PORT . ';dbname=' . $DATABASE_NAME . ';charset=utf8', $DATABASE_USER, $DATABASE_PASS);
-    } catch (PDOException $e) {
-        echo "Database error: " . $e->getMessage();
-    }
+    return trim(exec('git log --pretty="%h" -n1 HEAD'));
 }
 
 $pdo = pdo_connect_mysql();

@@ -19,9 +19,7 @@ $stmt = $pdo->query('SELECT * FROM contacts ORDER BY id');
 $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if (true) {
-    $x = '12';
-} else {
-    $x = '10';
+    $version = '12';
 }
 ?>
 <!doctype html>
@@ -38,6 +36,7 @@ if (true) {
         <div class="row">
             <div class="col-12 text-center">
                 <h1>Sistema de Cadastro Inteligente</h1>
+                <h3>Versão: <?= get_version() ?></h3>
             </div>
         </div>
         <div class="row">

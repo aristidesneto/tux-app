@@ -33,7 +33,6 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="col-12 text-center">
                 <h1>Sistema de Cadastro Inteligente</h1>
                 <h4>Versão: <?= get_version() ?></h4>
-                <h4>Pod: <?= $_ENV['HOSTNAME'] ?? '0.0.0.0' ?></h4>
             </div>
         </div>
         <div class="row">

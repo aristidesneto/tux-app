@@ -32,11 +32,11 @@ steps:
       - |
 
         docker run --rm \
-          -e SONAR_HOST_URL="http://35.193.8.14:9000" \
-          -e SONAR_LOGIN="sqp_8afb1b679b82b75e0c094f5445bcd497e3399bc1" \
+          -e SONAR_HOST_URL="http://34.121.113.254" \
+          -e SONAR_LOGIN="sqp_46011be00239d2850191b48d31ad3a96d2c54c81" \
           -v "/workspace:/usr/src" \
           sonarsource/sonar-scanner-cli \
-        -Dsonar.projectKey=aristides-neto_tux-app_AYHtgBDWKSVLYYPB0J1q \
+        -Dsonar.projectKey=aristides-neto_tux-app_AYHyqov-cad-2lXBTNtl \
         -Dsonar.sources=.
 
   # Altera manifesto Kubernetes para nova imagem criada

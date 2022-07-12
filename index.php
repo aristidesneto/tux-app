@@ -43,7 +43,7 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <div class="row mt-4">
             <div class="col-12">
-                <table class="table">
+                <table class="table" aria-describedby="users">
                     <thead>
                         <tr>
                             <th scope="col">#</th>

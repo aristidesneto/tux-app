@@ -10,7 +10,6 @@ $pdo->query('TRUNCATE TABLE contacts');
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="refresh" content="2; URL='index.php'"/>
     <title><?= $_ENV['APP_NAME'] ?? 'App Demo' ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
   </head>
@@ -21,6 +20,7 @@ $pdo->query('TRUNCATE TABLE contacts');
             <div class="col-12">
                 <div class="alert alert-success">
                     Puts!!! Seus dados já eram. Aguarde...
+                    <a href="index.php" class="btn btn-success">Voltar</a>
                 </div>
             </div>
         </div>

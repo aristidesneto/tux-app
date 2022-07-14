@@ -19,7 +19,7 @@ $pdo->query('TRUNCATE TABLE contacts');
         <div class="row mt-4">
             <div class="col-12">
                 <div class="alert alert-success">
-                    Puts!!! Seus dados já eram. Aguarde...
+                    Puts!!! Seus dados já eram.
                     <a href="index.php" class="btn btn-success">Voltar</a>
                 </div>
             </div>

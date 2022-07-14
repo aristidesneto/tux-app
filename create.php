@@ -38,7 +38,7 @@ $pdo->query($contacts);
         <div class="row mt-4">
             <div class="col-12">
                 <div class="alert alert-success">
-                    Cadastro realizado com sucesso! Aguarde...
+                    Cadastro realizado com sucesso!
                     <a href="index.php" class="btn btn-success">Voltar</a>
                 </div>
             </div>

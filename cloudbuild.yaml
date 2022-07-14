@@ -13,6 +13,7 @@ steps:
 
         docker build --build-arg HASH_VERSION=$SHORT_SHA \
           -t us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA .
+    waitFor: [-]
 
   # Docker Push
   - name: 'gcr.io/cloud-builders/docker'
@@ -22,6 +23,7 @@ steps:
       - -c
       - |
         docker push us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA
+    waitFor: [Docker Build]
 
   # Sonarqube Scanner
   - name: 'gcr.io/cloud-builders/docker'
@@ -32,12 +34,14 @@ steps:
       - |
 
         docker run --rm \
-          -e SONAR_HOST_URL="https://sonar.linkinside.com.br" \
+          -e SONAR_HOST_URL=$URL_SONAR \
           -e SONAR_LOGIN="sqp_46011be00239d2850191b48d31ad3a96d2c54c81" \
           -v "/workspace:/usr/src" \
           sonarsource/sonar-scanner-cli \
         -Dsonar.projectKey=aristides-neto_tux-app_AYHyqov-cad-2lXBTNtl \
         -Dsonar.sources=.
+    secretEnv: ['URL_SONAR']
+    waitFor: [Docker Push]
 
   # Altera manifesto Kubernetes para nova imagem criada
   - name: 'gcr.io/cloud-builders/docker'
@@ -57,4 +61,9 @@ steps:
         git add .
         git commit -am "Atualizado a imagem para a versao $SHORT_SHA"
         git push
+    waitFor: [SonarQube Scanner]
 
+availableSecrets:
+  secretManager:
+  - versionName: projects/536548052894/secrets/URL_SONAR/versions/latest
+    env: 'URL_SONAR'

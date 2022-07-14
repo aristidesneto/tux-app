@@ -9,9 +9,6 @@ RUN composer install --prefer-dist --optimize-autoloader --no-dev
 
 FROM php:8.1-fpm
 
-RUN useradd -ms /bin/bash -u 1000 ubuntu
-RUN usermod -aG root ubuntu
-
 WORKDIR /var/www/html
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -33,6 +30,6 @@ ENV TZ=America/Sao_Paulo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 COPY --from=build /app /var/www/html
-RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data: /var/www/html
 
 CMD [ "php", "-S", "0.0.0.0:80" ]

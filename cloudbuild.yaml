@@ -7,10 +7,7 @@ steps:
     args:
       - -c
       - |
-        echo $REPO_NAME
-        echo $BRANCH_NAME
-        echo $SHORT_SHA
-
+        
         docker build --build-arg HASH_VERSION=$SHORT_SHA \
           -t us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA .
     waitFor: [-]
@@ -34,13 +31,13 @@ steps:
       - |
 
         docker run --rm \
-          -e SONAR_HOST_URL=$$URL_SONAR \
-          -e SONAR_LOGIN="sqp_46011be00239d2850191b48d31ad3a96d2c54c81" \
+          -e SONAR_HOST_URL=$$SONAR_HOST_URL \
+          -e SONAR_LOGIN=$$SONAR_LOGIN \
           -v "/workspace:/usr/src" \
           sonarsource/sonar-scanner-cli \
         -Dsonar.projectKey=aristides-neto_tux-app_AYHyqov-cad-2lXBTNtl \
         -Dsonar.sources=.
-    secretEnv: ['URL_SONAR']
+    secretEnv: ['SONAR_HOST_URL', 'SONAR_LOGIN']
     waitFor: [Docker Push]
 
   # Altera manifesto Kubernetes para nova imagem criada
@@ -65,5 +62,7 @@ steps:
 
 availableSecrets:
   secretManager:
-  - versionName: projects/536548052894/secrets/URL_SONAR/versions/latest
-    env: 'URL_SONAR'
+  - versionName: projects/536548052894/secrets/SONAR_HOST_URL/versions/latest
+    env: 'SONAR_HOST_URL'
+  - versionName: projects/536548052894/secrets/SONAR_LOGIN/versions/latest
+    env: 'SONAR_LOGIN'

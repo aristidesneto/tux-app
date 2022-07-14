@@ -34,7 +34,7 @@ steps:
       - |
 
         docker run --rm \
-          -e SONAR_HOST_URL=$URL_SONAR \
+          -e SONAR_HOST_URL=$$URL_SONAR \
           -e SONAR_LOGIN="sqp_46011be00239d2850191b48d31ad3a96d2c54c81" \
           -v "/workspace:/usr/src" \
           sonarsource/sonar-scanner-cli \

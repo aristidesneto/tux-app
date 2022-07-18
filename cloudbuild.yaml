@@ -7,9 +7,12 @@ steps:
     args:
       - -c
       - |
-        
+
         docker build --build-arg HASH_VERSION=$SHORT_SHA \
-          -t us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA .
+          -t us-central1-docker.pkg.dev/images-356713/tux-app/main:$SHORT_SHA .
+        
+        # docker build --build-arg HASH_VERSION=$SHORT_SHA \
+        #   -t us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA .
     waitFor: [-]
 
   # Docker Push
@@ -19,26 +22,29 @@ steps:
     args:
       - -c
       - |
-        docker push us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA
+
+        docker push us-central1-docker.pkg.dev/images-356713/tux-app/main:$SHORT_SHA
+
+        # docker push us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA
     waitFor: [Docker Build]
 
   # Sonarqube Scanner
-  - name: 'gcr.io/cloud-builders/docker'
-    id: SonarQube Scanner
-    entrypoint: bash
-    args:
-      - -c
-      - |
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   id: SonarQube Scanner
+  #   entrypoint: bash
+  #   args:
+  #     - -c
+  #     - |
 
-        docker run --rm \
-          -e SONAR_HOST_URL=$$SONAR_HOST_URL \
-          -e SONAR_LOGIN=$$SONAR_LOGIN \
-          -v "/workspace:/usr/src" \
-          sonarsource/sonar-scanner-cli \
-        -Dsonar.projectKey=aristides-neto_tux-app_AYHyqov-cad-2lXBTNtl \
-        -Dsonar.sources=.
-    secretEnv: ['SONAR_HOST_URL', 'SONAR_LOGIN']
-    waitFor: [Docker Push]
+  #       docker run --rm \
+  #         -e SONAR_HOST_URL=$$SONAR_HOST_URL \
+  #         -e SONAR_LOGIN=$$SONAR_LOGIN \
+  #         -v "/workspace:/usr/src" \
+  #         sonarsource/sonar-scanner-cli \
+  #       -Dsonar.projectKey=aristides-neto_tux-app_AYHyqov-cad-2lXBTNtl \
+  #       -Dsonar.sources=.
+  #   secretEnv: ['SONAR_HOST_URL', 'SONAR_LOGIN']
+  #   waitFor: [Docker Push]
 
   # Altera manifesto Kubernetes para nova imagem criada
   - name: 'gcr.io/cloud-builders/docker'
@@ -51,7 +57,7 @@ steps:
         git clone https://aristides-neto:$_BB_TOKEN@bitbucket.org/aristides-neto/tux-app-hml.git
         cd tux-app-hml
         echo "OLD:" && cat *-dp.yaml
-        sed -i "s|\(.us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:.*\)| us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA|g" *-dp.yaml
+        sed -i "s|\(.us-central1-docker.pkg.dev/images-356713/tux-app/main:.*\)| us-central1-docker.pkg.dev/images-356713/tux-app/main:$SHORT_SHA|g" *-dp.yaml
         echo && echo "NEW:" && cat *-dp.yaml
         git config --global user.email cgloud@pipeline.com
         git config --global user.name "CloudBuildCICD"

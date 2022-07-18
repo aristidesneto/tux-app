@@ -66,9 +66,9 @@ steps:
         git push
     waitFor: [Docker Push]
 
-availableSecrets:
-  secretManager:
-  - versionName: projects/536548052894/secrets/SONAR_HOST_URL/versions/latest
-    env: 'SONAR_HOST_URL'
-  - versionName: projects/536548052894/secrets/SONAR_LOGIN/versions/latest
-    env: 'SONAR_LOGIN'
+# availableSecrets:
+#   secretManager:
+#   - versionName: projects/536548052894/secrets/SONAR_HOST_URL/versions/latest
+#     env: 'SONAR_HOST_URL'
+#   - versionName: projects/536548052894/secrets/SONAR_LOGIN/versions/latest
+#     env: 'SONAR_LOGIN'

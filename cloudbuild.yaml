@@ -28,6 +28,10 @@ steps:
         # docker push us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA
     waitFor: [Docker Build]
 
+logsBucket: 'gs://cicd_logs'
+# options:
+#   logging: GCS_ONLY
+
   # Sonarqube Scanner
   # - name: 'gcr.io/cloud-builders/docker'
   #   id: SonarQube Scanner

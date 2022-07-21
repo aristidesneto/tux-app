@@ -20,9 +20,4 @@ function pdo_connect_mysql()
     }
 }
 
-function get_version()
-{
-    return $_ENV['GIT_HASH_VERSION'] ?? 'Versão não encontrada.';
-}
-
 $pdo = pdo_connect_mysql();

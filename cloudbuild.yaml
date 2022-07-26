@@ -8,11 +8,7 @@ steps:
       - -c
       - |
 
-        docker build --build-arg HASH_VERSION=$SHORT_SHA \
-          -t us-central1-docker.pkg.dev/images-2rpnet/tux-app/main:$SHORT_SHA .
-        
-        # docker build --build-arg HASH_VERSION=$SHORT_SHA \
-        #   -t us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA .
+        docker build -t us-central1-docker.pkg.dev/images-2rpnet/tux-app/main:$SHORT_SHA .
     waitFor: [-]
 
   # Docker Push
@@ -24,8 +20,6 @@ steps:
       - |
 
         docker push us-central1-docker.pkg.dev/images-2rpnet/tux-app/main:$SHORT_SHA
-
-        # docker push us-east1-docker.pkg.dev/project-lab-355520/tux-app/main:$SHORT_SHA
     waitFor: [Docker Build]
 
 logsBucket: 'gs://cicd_logs'

@@ -22,9 +22,7 @@ steps:
         docker push us-central1-docker.pkg.dev/images-2rpnet/tux-app/main:$SHORT_SHA
     waitFor: [Docker Build]
 
-logsBucket: 'gs://cicd_logs'
-# options:
-#   logging: GCS_ONLY
+
 
   # Sonarqube Scanner
   # - name: 'gcr.io/cloud-builders/docker'
@@ -45,25 +43,28 @@ logsBucket: 'gs://cicd_logs'
   #   waitFor: [Docker Push]
 
   # Altera manifesto Kubernetes para nova imagem criada
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   id: Update Kubernetes
-  #   entrypoint: bash
-  #   args:
-  #     - -c
-  #     - |
+  - name: 'gcr.io/cloud-builders/docker'
+    id: Update Kubernetes
+    entrypoint: bash
+    args:
+      - -c
+      - |
         
-  #       git clone https://aristides-neto:$_BB_TOKEN@bitbucket.org/aristides-neto/tux-app-hml.git
-  #       cd tux-app-hml
-  #       echo "OLD:" && cat *-dp.yaml
-  #       sed -i "s|\(.us-central1-docker.pkg.dev/images-356713/tux-app/main:.*\)| us-central1-docker.pkg.dev/images-356713/tux-app/main:$SHORT_SHA|g" *-dp.yaml
-  #       echo && echo "NEW:" && cat *-dp.yaml
-  #       git config --global user.email cgloud@pipeline.com
-  #       git config --global user.name "CloudBuildCICD"
-  #       git add .
-  #       git commit -am "Atualizado a imagem para a versao $SHORT_SHA"
-  #       git push
-  #   waitFor: [Docker Push]
+        git clone https://aristides-neto:$_BB_TOKEN@bitbucket.org/aristides-neto/tux-app-hml.git
+        cd tux-app-hml
+        echo "OLD:" && cat *-dp.yaml
+        sed -i "s|\(.us-central1-docker.pkg.dev/images-2rpnet/tux-app/main:.*\)| us-central1-docker.pkg.dev/images-2rpnet/tux-app/main:$SHORT_SHA|g" *-dp.yaml
+        echo && echo "NEW:" && cat *-dp.yaml
+        git config --global user.email cgloud@pipeline.com
+        git config --global user.name "CloudBuildCICD"
+        git add .
+        git commit -am "Atualizado a imagem para a versao $SHORT_SHA"
+        git push
+    waitFor: [Docker Push]
 
+logsBucket: 'gs://cicd_logs'
+# options:
+#   logging: GCS_ONLY
 # availableSecrets:
 #   secretManager:
 #   - versionName: projects/536548052894/secrets/SONAR_HOST_URL/versions/latest

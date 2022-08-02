@@ -13,6 +13,8 @@ function pdo_connect_mysql()
     $DATABASE_PASS = $_ENV['DB_PASS'];
     $DATABASE_NAME = $_ENV['DB_NAME'];
 
+    echo $DATABASE_HOST;
+
     try {
     	return new PDO('mysql:host=' . $DATABASE_HOST . ';port=' . $DATABASE_PORT . ';dbname=' . $DATABASE_NAME . ';charset=utf8', $DATABASE_USER, $DATABASE_PASS);
     } catch (PDOException $e) {

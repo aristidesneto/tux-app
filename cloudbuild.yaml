@@ -8,9 +8,20 @@ steps:
       - -c
       - |
 
-        env
-        set
+        echo $REPO_NAME # bitbucket_aristides-neto_tux-app
+        echo $BRANCH_NAME # master
+        echo $SHORT_SHA #8ae4c71
+        case $BRANCH_NAME in
+          master | main) export build_env="-prd";;
+          hml | homolog) export build_env="-hml";;
+          *) echo "Branch inválida"; exit 1;;
+        esac
 
+        export build_repo=$(echo $REPO_NAME | cut -d '_' -f3)$build_env
+        export build_registry=$(echo $REPO_NAME | cut -d '_' -f3)/$BRANCH_NAME
+
+
+        env | grep "^build_" > /workspace/build_vars
     waitFor: []
 
   # Sonarqube Scanner
@@ -20,6 +31,8 @@ steps:
     args:
       - -c
       - |
+
+        source /workspace/build_vars
 
         apt install -y jq
 
@@ -31,7 +44,7 @@ steps:
         -Dsonar.projectKey=$REPO_NAME \
         -Dsonar.sources=.
 
-        export quality_gate_status=$(curl -s -u squ_ffe54c62ccea6dfcbcfd6867f619aea92fda8948: \
+        export quality_gate_status=$(curl -s -u $$SONAR_LOGIN: \
           http://35.225.36.251/api/qualitygates/project_status?projectKey=$REPO_NAME | jq '.projectStatus.status' | tr -d '"')
 
         if [ $quality_gate_status = 'OK' ]; then
@@ -52,7 +65,9 @@ steps:
       - -c
       - |
 
-        docker build -t us-central1-docker.pkg.dev/images-2rpnet/$REPO_NAME/$BRANCH_NAME:$SHORT_SHA .
+        source /workspace/build_vars
+
+        docker build -t us-central1-docker.pkg.dev/images-2rpnet/build_registry:$SHORT_SHA .
     waitFor: [SonarQube Scanner]
 
   # Docker Push
@@ -63,7 +78,9 @@ steps:
       - -c
       - |
 
-        docker push us-central1-docker.pkg.dev/images-2rpnet/$REPO_NAME/$BRANCH_NAME:$SHORT_SHA
+        source /workspace/build_vars
+
+        docker push us-central1-docker.pkg.dev/images-2rpnet/build_registry:$SHORT_SHA
     waitFor: [Docker Build]
 
   
@@ -76,10 +93,12 @@ steps:
       - -c
       - |
         
-        git clone https://$$BITBUCKET_TOKEN@bitbucket.org/aristides-neto/tux-app-hml.git
+        source /workspace/build_vars
+
+        git clone https://$$BITBUCKET_TOKEN@bitbucket.org/aristides-neto/$build_repo.git
         cd tux-app-hml
         echo "OLD:" && cat *-dp.yaml
-        sed -i "s|\(.us-central1-docker.pkg.dev/images-2rpnet/$REPO_NAME/$BRANCH_NAME:.*\)| us-central1-docker.pkg.dev/images-2rpnet/$REPO_NAME/$BRANCH_NAME:$SHORT_SHA|g" *-dp.yaml
+        sed -i "s|\(.us-central1-docker.pkg.dev/images-2rpnet/$build_registry:.*\)| us-central1-docker.pkg.dev/images-2rpnet/$build_registry:$SHORT_SHA|g" *-dp.yaml
         echo && echo "NEW:" && cat *-dp.yaml
         git config --global user.email cgloud@pipeline.com
         git config --global user.name "CloudBuildCICD"

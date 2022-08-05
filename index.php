@@ -32,6 +32,7 @@ $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="row">
             <div class="col-12 text-center">
                 <h1>Sistema de Cadastro Inteligente</h1>
+                <h2><?= $_ENV['APP_ENV'] ?? ':/' ?></h2>
             </div>
         </div>
         <div class="row">

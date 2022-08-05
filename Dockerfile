@@ -12,8 +12,8 @@ FROM php:8.1-fpm
 WORKDIR /var/www/html
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG HASH_VERSION=1
-ENV GIT_HASH_VERSION=$HASH_VERSION
+ARG APP_ENV=1
+ENV APP_ENV=$APP_ENV
 
 RUN apt-get update && apt-get install -y \
 		libfreetype6-dev \

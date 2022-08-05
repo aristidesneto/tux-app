@@ -1,5 +1,18 @@
 steps:
 
+  # Environment
+  - name: 'gcr.io/cloud-builders/docker'
+    id: Environment
+    entrypoint: bash
+    args:
+      - -c
+      - |
+
+        env
+        set
+
+    waitFor: []
+
   # Sonarqube Scanner
   - name: 'gcr.io/cloud-builders/docker'
     id: SonarQube Scanner
@@ -12,7 +25,7 @@ steps:
 
         docker run --rm \
           -e SONAR_HOST_URL=http://35.225.36.251 \
-          -e SONAR_LOGIN=squ_ffe54c62ccea6dfcbcfd6867f619aea92fda8948 \
+          -e SONAR_LOGIN=$$SONAR_LOGIN \
           -v "/workspace:/usr/src" \
           sonarsource/sonar-scanner-cli \
         -Dsonar.projectKey=$REPO_NAME \
@@ -28,7 +41,8 @@ steps:
           exit 1
         fi;
 
-    waitFor: []
+    secretEnv: ['SONAR_LOGIN']
+    waitFor: [Environment]
 
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
@@ -38,7 +52,7 @@ steps:
       - -c
       - |
 
-        docker build -t us-central1-docker.pkg.dev/images-2rpnet/tux-app/main:$SHORT_SHA .
+        docker build -t us-central1-docker.pkg.dev/images-2rpnet/$REPO_NAME/$BRANCH_NAME:$SHORT_SHA .
     waitFor: [SonarQube Scanner]
 
   # Docker Push
@@ -49,7 +63,7 @@ steps:
       - -c
       - |
 
-        docker push us-central1-docker.pkg.dev/images-2rpnet/tux-app/main:$SHORT_SHA
+        docker push us-central1-docker.pkg.dev/images-2rpnet/$REPO_NAME/$BRANCH_NAME:$SHORT_SHA
     waitFor: [Docker Build]
 
   
@@ -62,24 +76,25 @@ steps:
       - -c
       - |
         
-        git clone https://aristides-neto:$_BB_TOKEN@bitbucket.org/aristides-neto/tux-app-hml.git
+        git clone https://$$BITBUCKET_TOKEN@bitbucket.org/aristides-neto/tux-app-hml.git
         cd tux-app-hml
         echo "OLD:" && cat *-dp.yaml
-        sed -i "s|\(.us-central1-docker.pkg.dev/images-2rpnet/tux-app/main:.*\)| us-central1-docker.pkg.dev/images-2rpnet/tux-app/main:$SHORT_SHA|g" *-dp.yaml
+        sed -i "s|\(.us-central1-docker.pkg.dev/images-2rpnet/$REPO_NAME/$BRANCH_NAME:.*\)| us-central1-docker.pkg.dev/images-2rpnet/$REPO_NAME/$BRANCH_NAME:$SHORT_SHA|g" *-dp.yaml
         echo && echo "NEW:" && cat *-dp.yaml
         git config --global user.email cgloud@pipeline.com
         git config --global user.name "CloudBuildCICD"
         git add .
         git commit -am "Atualizado a imagem para a versao $SHORT_SHA"
         git push
+    secretEnv: ['BITBUCKET_TOKEN']
     waitFor: [Docker Push]
 
 logsBucket: 'gs://cicd_logs'
 # options:
 #   logging: GCS_ONLY
-# availableSecrets:
-#   secretManager:
-#   - versionName: projects/536548052894/secrets/SONAR_HOST_URL/versions/latest
-#     env: 'SONAR_HOST_URL'
-#   - versionName: projects/536548052894/secrets/SONAR_LOGIN/versions/latest
-#     env: 'SONAR_LOGIN'
+availableSecrets:
+  secretManager:
+  - versionName: projects/466193647327/secrets/SONAR_LOGIN/versions/latest
+    env: 'SONAR_LOGIN'
+  - versionName: projects/466193647327/secrets/BITBUCKET_TOKEN/versions/latest
+    env: 'BITBUCKET_TOKEN'

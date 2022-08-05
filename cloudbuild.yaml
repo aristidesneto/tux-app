@@ -1,5 +1,33 @@
 steps:
 
+  # Sonarqube Scanner
+  - name: 'gcr.io/cloud-builders/docker'
+    id: SonarQube Scanner
+    entrypoint: bash
+    args:
+      - -c
+      - |
+
+        docker run --rm \
+          -e SONAR_HOST_URL=http://35.225.36.251 \
+          -e SONAR_LOGIN=squ_ffe54c62ccea6dfcbcfd6867f619aea92fda8948 \
+          -v "/workspace:/usr/src" \
+          sonarsource/sonar-scanner-cli \
+        -Dsonar.projectKey=$REPO_NAME \
+        -Dsonar.sources=.
+
+        STATUS_SONAR=$(curl -s -u squ_ffe54c62ccea6dfcbcfd6867f619aea92fda8948: \
+        http://35.225.36.251/api/qualitygates/project_status?projectKey=aristides-neto_tux-app | jq '.projectStatus.status' | tr -d '"')
+
+        if [ $STATUS_SONAR = 'OK' ]; then
+          echo "SUCCESS: QUALITY GATE OK"
+        else
+          echo "ERROR: QUALIY GATE FAIL"
+          exit 1
+        fi;
+
+    waitFor: []
+
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     id: Docker Build
@@ -9,7 +37,7 @@ steps:
       - |
 
         docker build -t us-central1-docker.pkg.dev/images-2rpnet/tux-app/main:$SHORT_SHA .
-    waitFor: [-]
+    waitFor: [SonarQube Scanner]
 
   # Docker Push
   - name: 'gcr.io/cloud-builders/docker'
@@ -22,25 +50,7 @@ steps:
         docker push us-central1-docker.pkg.dev/images-2rpnet/tux-app/main:$SHORT_SHA
     waitFor: [Docker Build]
 
-
-
-  # Sonarqube Scanner
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   id: SonarQube Scanner
-  #   entrypoint: bash
-  #   args:
-  #     - -c
-  #     - |
-
-  #       docker run --rm \
-  #         -e SONAR_HOST_URL=$$SONAR_HOST_URL \
-  #         -e SONAR_LOGIN=$$SONAR_LOGIN \
-  #         -v "/workspace:/usr/src" \
-  #         sonarsource/sonar-scanner-cli \
-  #       -Dsonar.projectKey=aristides-neto_tux-app_AYHyqov-cad-2lXBTNtl \
-  #       -Dsonar.sources=.
-  #   secretEnv: ['SONAR_HOST_URL', 'SONAR_LOGIN']
-  #   waitFor: [Docker Push]
+  
 
   # Altera manifesto Kubernetes para nova imagem criada
   - name: 'gcr.io/cloud-builders/docker'

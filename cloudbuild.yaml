@@ -8,6 +8,8 @@ steps:
       - -c
       - |
 
+        apt install -y jq
+
         docker run --rm \
           -e SONAR_HOST_URL=http://35.225.36.251 \
           -e SONAR_LOGIN=squ_ffe54c62ccea6dfcbcfd6867f619aea92fda8948 \
@@ -16,12 +18,13 @@ steps:
         -Dsonar.projectKey=$REPO_NAME \
         -Dsonar.sources=.
 
-        export quality_gate_status=$(curl -s -u squ_ffe54c62ccea6dfcbcfd6867f619aea92fda8948: http://35.225.36.251/api/qualitygates/project_status?projectKey=aristides-neto_tux-app | jq '.projectStatus.status' | tr -d '"')
+        export quality_gate_status=$(curl -s -u squ_ffe54c62ccea6dfcbcfd6867f619aea92fda8948: \
+          http://35.225.36.251/api/qualitygates/project_status?projectKey=$REPO_NAME | jq '.projectStatus.status' | tr -d '"')
 
         if [ $quality_gate_status = 'OK' ]; then
           echo "SUCCESS: QUALITY GATE OK"
         else
-          echo "ERROR: QUALIY GATE FAIL"
+          echo "ERROR: QUALITY GATE FAIL"
           exit 1
         fi;
 

@@ -67,7 +67,7 @@ steps:
 
         source /workspace/build_vars
 
-        docker build -t us-central1-docker.pkg.dev/images-2rpnet/build_registry:$SHORT_SHA .
+        docker build -t us-central1-docker.pkg.dev/images-2rpnet/$build_registry:$SHORT_SHA .
     waitFor: [SonarQube Scanner]
 
   # Docker Push
@@ -80,7 +80,7 @@ steps:
 
         source /workspace/build_vars
 
-        docker push us-central1-docker.pkg.dev/images-2rpnet/build_registry:$SHORT_SHA
+        docker push us-central1-docker.pkg.dev/images-2rpnet/$build_registry:$SHORT_SHA
     waitFor: [Docker Build]
 
   
